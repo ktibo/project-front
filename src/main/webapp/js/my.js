@@ -7,21 +7,42 @@ $.ajaxSetup({
     }
 });
 
-$(document).ajaxError(function(event, xhr, options) {
+$(document).ajaxError(function (event, xhr, options) {
     alert('Error! ' + xhr.responseText);
 });
 
 function createPageButton(i) {
+
+    // const input = document.createElement('input');
+    // input.id = 'b' + i;
+    // input.type = "radio";
+    // input.className = "btn-check";
+    // input.autocomplete = "off";
+    //
+    // input.addEventListener("click", ev => {
+    //     currentPage = i;
+    //     refreshTable();
+    // });
+    // document.getElementById('pageButtons').appendChild(input);
+    //
+    // const label = document.createElement('label');
+    // label.setAttribute("for", input.id);
+    // label.className = "btn btn-outline-primary";
+    // label.innerText = i + 1;
+    // document.getElementById('pageButtons').appendChild(label);
+
+
     const button = document.createElement('button');
     button.innerText = i + 1;
     button.id = 'b' + i;
-    button.className ="btn btn-primary";
+    button.className ="btn btn-outline-secondary";
     //button.type="button";
     button.addEventListener("click", ev => {
         currentPage = i;
         refreshTable();
     });
     document.getElementById('pageButtons').appendChild(button);
+
 }
 
 function refreshTable() {
@@ -38,7 +59,7 @@ function refreshTable() {
             for (let i = 0; i < pageCount; i++) {
                 createPageButton(i);
             }
-            $("#b" + currentPage)[0].style.background = '#44d3ef';
+            $("#b" + currentPage)[0].className += ' active';
             getPlayers();
         }
     });
@@ -64,8 +85,8 @@ function refreshTable() {
                         '<input value="' + value.name + '" id="nameInput' + id + '" style="display: none"/>' +
                         '<div id="name' + id + '">' + value.name + '</div></td>';
                     event_data += '<td>' +
-                            '<input type="text" value="' + value.title + '" id="titleInput' + id + '" style="display: none"/>' +
-                            '<div id="title' + id + '">' + value.title + '</div>'+
+                        '<input type="text" value="' + value.title + '" id="titleInput' + id + '" style="display: none"/>' +
+                        '<div id="title' + id + '">' + value.title + '</div>' +
                         '</td>';
                     event_data += '<td>' +
                         '<select id="raceInput' + id + '" style="display: none"></select>' +
@@ -83,7 +104,7 @@ function refreshTable() {
                         '<img src="img/save.png" id="save' + id + '" style="display: none" onclick="saveAccount(this)"></td>';
                     event_data += '<td>' +
                         '<img src="img/delete.png" id="delete' + id + '" onclick="deleteAccount(this)"></td>';
-                        //'<i className="fa-solid fa-trash-can"></i></td>';
+                    //'<i className="fa-solid fa-trash-can"></i></td>';
                     event_data += '<tr>';
                 });
                 $('#accountsTable tbody').append(event_data);
@@ -107,7 +128,7 @@ function saveAccount(target) {
         url: '/rest/players/' + id,
         type: "POST",
         dataType: 'json',
-        data: JSON.stringify({ name: name, title: title, race: race, profession: profession, banned: banned }),
+        data: JSON.stringify({name: name, title: title, race: race, profession: profession, banned: banned}),
         success: function () {
             refreshTable();
         }
@@ -171,7 +192,15 @@ function createAccount() {
         url: '/rest/players/',
         type: "POST",
         dataType: 'json',
-        data: JSON.stringify({ name: name.value, title: title.value, race: race.value, profession: profession.value, level: level.value, birthday: birthdayTimestamp, banned: banned.value }),
+        data: JSON.stringify({
+            name: name.value,
+            title: title.value,
+            race: race.value,
+            profession: profession.value,
+            level: level.value,
+            birthday: birthdayTimestamp,
+            banned: banned.value
+        }),
         success: function () {
             refreshTable();
 
@@ -198,10 +227,11 @@ function populateSelect(select, options, innerHTML) {
     }
 }
 
-function getRaceArray(){
+function getRaceArray() {
     return ['HUMAN', 'DWARF', 'ELF', 'GIANT', 'ORC', 'TROLL', 'HOBBIT'];
 }
-function getProfessionArray(){
+
+function getProfessionArray() {
     return ['WARRIOR', 'ROGUE', 'SORCERER', 'CLERIC', 'PALADIN', 'NAZGUL', 'WARLOCK', 'DRUID'];
 }
 
